@@ -1,0 +1,38 @@
+.popup {
+  display: none;
+}
+
+.visible {
+  display: flex;
+  flex-direction: column;
+}
+
+.focused {
+  background-color: #bde4ff;
+  outline: 4px solid purple;
+  outline-offset: 2px;
+}
+ul {
+  list-style-type: '';
+}
+
+li + li {
+  margin-top: 10px;
+}
+
+li::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+li.checked::before {
+  background-color: #007acc;
+  border-color: #007acc;
+}

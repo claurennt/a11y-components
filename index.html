@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ARIA Patterns</title>
+
+    <link rel="stylesheet" crossorigin href="src/style.css" />
+  </head>
+  <body>
+    <h1>ARIA patterns</h1>
+    <!-- Editable multiselect combobox -->
+    <h2>Editable multiselect combobox</h2>
+    <label for="editable-combobox">Select cities</label>
+    <input
+      id="editable-combobox"
+      role="combobox"
+      aria-controls="cities-listbox"
+      aria-haspopup="listbox"
+      aria-expanded="false"
+      aria-activedescendant=""
+    />
+    <output id="no-results"></output>
+    <ul role="listbox" id="cities-listbox" aria-multiselectable="true"></ul>
+    <h3>Roles and attributes</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Role</th>
+          <th>Attributes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Input</td>
+          <td>combobox</td>
+          <td>
+            aria-controls, aria-haspopup, aria-expanded, aria-activedescendant
+          </td>
+        </tr>
+        <tr>
+          <td>Listbox</td>
+          <td>listbox</td>
+          <td>aria-multiselectable</td>
+        </tr>
+        <tr>
+          <td>Option</td>
+          <td>option</td>
+          <td>aria-selected</td>
+        </tr>
+      </tbody>
+    </table>
+    <script type="module" crossorigin src="src/main.ts"></script>
+  </body>
+</html>

@@ -10,19 +10,17 @@
   </head>
   <body>
     <h1>ARIA patterns</h1>
-    <!-- Editable multiselect combobox -->
-    <h2>Editable multiselect combobox</h2>
-    <label for="editable-combobox">Filter by cities</label>
+    <h2>Editable combobox with list popup</h2>
+    <label for="editable-combobox">Enter city</label>
     <input
       id="editable-combobox"
       role="combobox"
-      aria-controls="cities-listbox"
       aria-haspopup="listbox"
+      aria-controls="cities-listbox"
       aria-expanded="false"
-      aria-activedescendant=""
     />
     <output id="no-results"></output>
-    <ul role="listbox" id="cities-listbox" aria-multiselectable="true"></ul>
+    <ul role="listbox" id="cities-listbox" aria-label="Suggested cities"></ul>
     <h3>Roles and attributes</h3>
     <table>
       <thead>
@@ -36,21 +34,18 @@
         <tr>
           <td>Input</td>
           <td>combobox</td>
-          <td>
-            aria-controls, aria-haspopup, aria-expanded, aria-activedescendant
-          </td>
+          <td>aria-controls, aria-haspopup, aria-expanded</td>
         </tr>
         <tr>
-          <td>Listbox</td>
+          <td>Ul</td>
           <td>listbox</td>
-          <td>aria-multiselectable</td>
         </tr>
         <tr>
-          <td>Option</td>
+          <td>Li</td>
           <td>option</td>
-          <td>aria-selected</td>
         </tr>
       </tbody>
+      <p>Knowd issues: VoiceOver reads options twice on focus on Safari</p>
     </table>
     <script type="module" crossorigin src="src/main.ts"></script>
   </body>

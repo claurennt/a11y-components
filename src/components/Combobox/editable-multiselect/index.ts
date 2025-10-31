@@ -4,13 +4,8 @@ import {
   saveToLocalStorage,
   isFetchResponse,
   getCityAndCountryData,
-  isPreviousSelection,
-  updateSelection,
   createElement,
-  updateVisualFocus,
-  updateInputValue,
   clearUI,
-  updateActiveDescendant,
   debounce,
   filterCities,
 } from './utils.js';
@@ -25,8 +20,8 @@ const CONFIG = {
 
 /* ------------------ State ------------------ */
 let citiesData: string[] = [];
-let selectedCities: string[] = [];
-let currentIndex = -1;
+
+let currentIndex = 0;
 
 /* ------------------ Core Logic ------------------ */
 
@@ -50,7 +45,6 @@ async function loadCitiesData(): Promise<string[]> {
 function renderCityOptions(
   filteredCities: string[],
   listbox: HTMLUListElement,
-  selectedCities: string[],
   input: HTMLInputElement,
   output: HTMLOutputElement
 ) {
@@ -65,17 +59,13 @@ function renderCityOptions(
     const option = createElement('li', {
       role: 'option',
       id: `option-${index}`,
-      ariaChecked: 'false',
       textContent: city,
+      tabIndex: -1,
     });
-
-    if (isPreviousSelection(city, selectedCities)) {
-      option.classList.add('checked');
-    }
 
     option.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleSelection(option, city, input);
+      finaliseSelection(option, input, listbox);
     });
 
     listbox.appendChild(option);
@@ -85,22 +75,18 @@ function renderCityOptions(
   input.setAttribute('aria-expanded', 'true');
 }
 
-function toggleSelection(
+function finaliseSelection(
   option: HTMLLIElement,
-  city: string,
-  input: HTMLInputElement
+  input: HTMLInputElement,
+  listbox: HTMLUListElement
 ) {
-  option.classList.toggle('checked');
-  const isSelected = option.classList.contains('checked');
-  option.setAttribute('aria-selected', isSelected.toString());
-
-  updateSelection(city, selectedCities);
-  updateInputValue(input, selectedCities);
+  input.value = option.textContent;
+  clearUI(listbox, input);
 }
 
 /* ------------------ Keyboard Navigation ------------------ */
 
-function handleKeyboardNavigation(
+function handleListboxKeyboardNavigation(
   e: KeyboardEvent,
   listbox: HTMLUListElement,
   input: HTMLInputElement
@@ -132,19 +118,28 @@ function handleKeyboardNavigation(
       e.preventDefault();
       const option = options[currentIndex];
       if (!option) return;
-      toggleSelection(option, option.textContent || '', input);
+      finaliseSelection(option, input, listbox);
+      input.focus();
       return;
 
     case 'Escape':
     case 'Tab':
       clearUI(listbox, input);
+      input.focus();
       return;
   }
 
-  updateVisualFocus(options, focusedOption);
-  updateActiveDescendant(input, focusedOption);
+  if (focusedOption) {
+    focusedOption.focus();
+  }
 }
 
+function focusFirstOption(e: KeyboardEvent, listbox: HTMLUListElement) {
+  const firstOption = listbox.querySelector('[role="option"]') as HTMLLIElement;
+  if (e.key !== 'ArrowDown' || !firstOption) return;
+
+  firstOption.focus();
+}
 /* ------------------ Event Handlers ------------------ */
 
 async function handleFocus() {
@@ -166,7 +161,7 @@ function handleInput(
   }
 
   const filtered = filterCities(citiesData, query);
-  renderCityOptions(filtered, listbox, selectedCities, input, output);
+  renderCityOptions(filtered, listbox, input, output);
 }
 
 const debouncedHandleInput = debounce(handleInput, CONFIG.DEBOUNCE_DELAY);
@@ -183,7 +178,9 @@ export function initEditableMultiselectCombobox() {
   input.addEventListener('input', () =>
     debouncedHandleInput(listbox, output, input)
   );
-  input.addEventListener('keydown', (e) =>
-    handleKeyboardNavigation(e, listbox, input)
+  // Listen for keydown on both input and listbox
+  input.addEventListener('keydown', (e) => focusFirstOption(e, listbox));
+  listbox.addEventListener('keydown', (e) =>
+    handleListboxKeyboardNavigation(e, listbox, input)
   );
 }

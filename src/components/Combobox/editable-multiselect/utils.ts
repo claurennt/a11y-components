@@ -30,22 +30,9 @@ export function getFromLocalStorage(key: string) {
 
 export function isPreviousSelection(
   selection: string,
-  selectedCities: string[]
+  selectedCity: string[]
 ): boolean {
-  return selectedCities.includes(selection);
-}
-
-export function updateSelection(
-  selection: string,
-  selectedCities: string[]
-): void {
-  const index = selectedCities.indexOf(selection);
-
-  if (index === -1) {
-    selectedCities.push(selection);
-  } else {
-    selectedCities.splice(index, 1);
-  }
+  return selectedCity.includes(selection);
 }
 
 export function createElement<K extends keyof HTMLElementTagNameMap>(
@@ -65,31 +52,19 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-export function updateVisualFocus(
-  options: NodeListOf<HTMLLIElement>,
-  focusedOption: HTMLLIElement | undefined
-) {
-  if (!focusedOption) return;
-  // Remove focus from all
-  options.forEach((option) => option.classList.remove('focused'));
-
-  focusedOption.classList.add('focused');
-  focusedOption.scrollIntoView({ block: 'nearest' });
-}
-
 export function updateInputValue(
   input: HTMLInputElement,
-  selectedCities: string[]
+  selectedCity: string
 ) {
-  if (selectedCities.length === 0) {
+  if (selectedCity.length === 0) {
     input.value = '';
     return;
   }
-  if (selectedCities.length === 1 && selectedCities[0]) {
-    input.value = selectedCities[0];
+  if (selectedCity.length === 1) {
+    input.value = selectedCity[0];
     return;
   }
-  input.value = `${selectedCities.length} cities selected`;
+  input.value = `${selectedCity.length} cities selected`;
 }
 
 export function clearUI(
@@ -101,19 +76,6 @@ export function clearUI(
   listbox.innerHTML = '';
   listbox.classList.remove('visible');
   input.setAttribute('aria-expanded', 'false');
-  input.setAttribute('aria-activedescendant', '');
-}
-
-export function updateActiveDescendant(
-  input: HTMLInputElement,
-  focusedOption: HTMLLIElement | undefined
-) {
-  if (!focusedOption) {
-    input.setAttribute('aria-activedescendant', '');
-    return;
-  }
-
-  input.setAttribute('aria-activedescendant', focusedOption.id);
 }
 
 export function filterCities(cities: string[], query: string): string[] {

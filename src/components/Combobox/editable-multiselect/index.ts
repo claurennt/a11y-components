@@ -92,7 +92,7 @@ function toggleSelection(
 ) {
   option.classList.toggle('checked');
   const isSelected = option.classList.contains('checked');
-  option.setAttribute('aria-checked', isSelected.toString());
+  option.setAttribute('aria-selected', isSelected.toString());
 
   updateSelection(city, selectedCities);
   updateInputValue(input, selectedCities);

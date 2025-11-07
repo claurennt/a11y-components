@@ -7,60 +7,37 @@ export type EditableWithListPopupProps = {
   labelText: string;
   data: string[];
 };
-import {
-  fetchData,
-  isFetchResponse,
-  getCityAndCountryData,
-  clearUI,
-  debounce,
-  filterCities,
-} from './utils';
+import { clearOutput, clearUI, debounce, filterValues } from './utils';
 
 /* ------------------ Configuration ------------------ */
 const CONFIG = {
-  API_URL: 'https://countriesnow.space/api/v0.1/countries/population/cities',
   MIN_QUERY_LENGTH: 3,
   DEBOUNCE_DELAY: 500,
   KEYS: ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Tab', ' '], // Spacebar represented as ' '
 };
 
 /* ------------------ State ------------------ */
-let citiesData: string[] = [];
 let currentIndex = 0;
 
 /* ------------------ Core Logic ------------------ */
 
-async function loadCitiesData(): Promise<string[]> {
-  try {
-    const response = await fetchData(CONFIG.API_URL);
-    if (!isFetchResponse(response)) throw new Error('Invalid API format');
-
-    const parsed = getCityAndCountryData(response);
-    return parsed;
-  } catch (err) {
-    console.error('Failed to fetch cities:', err);
-    return [];
-  }
-}
-
-function renderCityOptions(
-  filteredCities: string[],
+function renderOptions(
+  filteredValues: string[],
   listbox: HTMLUListElement,
   input: HTMLInputElement,
   output: HTMLOutputElement
 ) {
   clearUI(listbox, input, output);
-
-  if (filteredCities.length === 0) {
+  if (filteredValues.length === 0) {
     output.textContent = 'No results found';
     return;
   }
 
-  filteredCities.forEach((city, index) => {
+  filteredValues.forEach((value, index) => {
     const option = createElement('li', {
       role: 'option',
       id: `option-${index}`,
-      textContent: city,
+      textContent: value,
       tabIndex: -1,
     });
 
@@ -143,20 +120,11 @@ function focusFirstOption(e: KeyboardEvent, listbox: HTMLUListElement) {
 }
 /* ------------------ Event Handlers ------------------ */
 
-async function handleFocus(data?: string[]) {
-  if (data && data.length > 0) {
-    citiesData = data;
-    return;
-  }
-  if (citiesData.length === 0) {
-    citiesData = await loadCitiesData();
-  }
-}
-
 function handleInput(
   listbox: HTMLUListElement,
   output: HTMLOutputElement,
-  input: HTMLInputElement
+  input: HTMLInputElement,
+  data: string[]
 ) {
   const query = (input.value || '').toLowerCase().trim();
 
@@ -165,10 +133,10 @@ function handleInput(
     return;
   }
 
-  const filtered = filterCities(citiesData, query);
-  renderCityOptions(filtered, listbox, input, output);
+  const filtered = filterValues(data, query);
+  renderOptions(filtered, listbox, input, output);
 }
-const clearOutput = (output: HTMLOutputElement) => (output.textContent = '');
+
 const debouncedHandleInput = debounce(handleInput, CONFIG.DEBOUNCE_DELAY);
 
 export const createEditableMultiselect = ({
@@ -197,13 +165,13 @@ export const createEditableMultiselect = ({
   });
   const output = createElement('output', {
     id: `${id}-no-results`,
+    ariaRelevant: 'additions',
     role: 'status', // polyfill for Safari that does not announce the live region
   });
 
-  input.addEventListener('focus', () => handleFocus(data));
-  input.addEventListener('input', () =>
-    debouncedHandleInput(listbox, output, input)
-  );
+  input.addEventListener('input', () => {
+    debouncedHandleInput(listbox, output, input, data);
+  });
   input.addEventListener('keydown', (e) => {
     clearOutput(output);
     focusFirstOption(e, listbox);

@@ -17,14 +17,30 @@ This component has been built according to the [W3C Combobox Pattern](https://ww
 
 - The `aria-activedescendant` attribute is not well supported by screen readers. The focus does not remain on the input when navigating the listbox options, but is moved to the currently highlighted option instead.
 
-<br aria-hidden />{' '}
+<br aria-hidden />
 
 <Canvas>
   <Story of={Combobox.EditableWithListPopup} />
 </Canvas>
 
+## Keyboard Behaviour
+
+When focus is on the input field:
+
+- Down Arrow: places focus on the first focusable element in the listbox, if the listbox is available
+
+When focus is on the listbox:
+
+-Enter or Space: Accepts the focused option in the listbox by closing the popup, placing the accepted value in the combobox, and if the combobox is editable, placing the input cursor at the end of the value.
+
+- Escape or Tab: Closes the popup and returns focus to the combobox.
+
 ### Known Issues
 
 VoiceOver reads options twice on focus on Safari
+
+#### Useful links
+
+For more information about the Combobox pattern, visit: [W3C ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
 
 <ArgTypes of={Combobox.EditableWithListPopup} />

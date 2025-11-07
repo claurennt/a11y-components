@@ -197,7 +197,7 @@ export const createEditableMultiselect = ({
   });
   const output = createElement('output', {
     id: `${id}-no-results`,
-    ariaLive: 'polite',
+    role: 'status', // polyfill for Safari that does not announce the live region
   });
 
   input.addEventListener('focus', () => handleFocus(data));

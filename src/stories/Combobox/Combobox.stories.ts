@@ -24,7 +24,7 @@ export const EditableWithListPopup: StoryObj = {
   args: {
     id: 'editable-combobox',
     ariaControls: 'cities-listbox',
-    labelText: 'Select a city',
+    labelText: 'Enter a city',
     data,
   },
 };

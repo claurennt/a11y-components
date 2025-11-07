@@ -1,0 +1,61 @@
+.editable-listpopup-wrapper {
+  position: relative;
+  margin: 10px;
+  width: 300px;
+}
+
+.editable-listpopup-wrapper input {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin: 10px 0 5px 0;
+}
+
+.editable-listpopup-wrapper .visible {
+  display: flex;
+  flex-direction: column;
+}
+
+.editable-listpopup-wrapper li:focus,
+.editable-listpopup-wrapper li:hover {
+  background-color: #bde4ff;
+  outline: 4px solid purple;
+  outline-offset: 2px;
+  cursor: pointer;
+}
+
+.editable-listpopup-wrapper ul {
+  display: none;
+  list-style-type: ''; /* Removes default list styling but keeps list semantics on Safari */
+  z-index: 1000;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+.editable-listpopup-wrapper li {
+  padding: 10px;
+}
+.editable-listpopup-wrapper li + li {
+  margin-top: 10px;
+}
+.editable-listpopup-wrapper output {
+  display: block;
+  text-align: center;
+}

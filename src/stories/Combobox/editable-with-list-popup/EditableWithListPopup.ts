@@ -1,14 +1,20 @@
+import './EditableWithListPopup.css';
+import { createElement } from '../../utils';
+
+export type EditableWithListPopupProps = {
+  id: string;
+  ariaControls: string;
+  labelText: string;
+  data: string[];
+};
 import {
   fetchData,
-  getFromLocalStorage,
-  saveToLocalStorage,
   isFetchResponse,
   getCityAndCountryData,
-  createElement,
   clearUI,
   debounce,
   filterCities,
-} from './utils.js';
+} from './utils';
 
 /* ------------------ Configuration ------------------ */
 const CONFIG = {
@@ -20,21 +26,16 @@ const CONFIG = {
 
 /* ------------------ State ------------------ */
 let citiesData: string[] = [];
-
 let currentIndex = 0;
 
 /* ------------------ Core Logic ------------------ */
 
 async function loadCitiesData(): Promise<string[]> {
-  const cached = getFromLocalStorage('citiesData');
-  if (cached) return cached;
-
   try {
     const response = await fetchData(CONFIG.API_URL);
     if (!isFetchResponse(response)) throw new Error('Invalid API format');
 
     const parsed = getCityAndCountryData(response);
-    saveToLocalStorage('citiesData', parsed);
     return parsed;
   } catch (err) {
     console.error('Failed to fetch cities:', err);
@@ -142,7 +143,11 @@ function focusFirstOption(e: KeyboardEvent, listbox: HTMLUListElement) {
 }
 /* ------------------ Event Handlers ------------------ */
 
-async function handleFocus() {
+async function handleFocus(data?: string[]) {
+  if (data && data.length > 0) {
+    citiesData = data;
+    return;
+  }
   if (citiesData.length === 0) {
     citiesData = await loadCitiesData();
   }
@@ -166,15 +171,34 @@ function handleInput(
 
 const debouncedHandleInput = debounce(handleInput, CONFIG.DEBOUNCE_DELAY);
 
-/* ------------------ Init ------------------ */
-export function initEditableMultiselectCombobox() {
-  const input = document.querySelector<HTMLInputElement>('#editable-combobox');
-  const listbox = document.querySelector<HTMLUListElement>('#cities-listbox');
-  const output = document.querySelector<HTMLOutputElement>('#no-results');
+export const createEditableMultiselect = ({
+  id,
+  ariaControls,
+  labelText = 'Select a city',
+  data,
+}: EditableWithListPopupProps) => {
+  const wrapper = createElement('div', {
+    className: 'editable-listpopup-wrapper',
+  });
+  const label = createElement('label', {
+    for: id,
+    textContent: labelText,
+  });
 
-  if (!input || !listbox || !output) return;
+  const input = createElement('input', {
+    id,
+    role: 'combobox',
+    'aria-haspopup': 'listbox',
+    'aria-controls': ariaControls,
+    'aria-expanded': 'false',
+  });
+  const listbox = createElement('ul', {
+    role: 'listbox',
+    id: ariaControls,
+  });
+  const output = createElement('output', { id: `${id}-no-results` });
 
-  input.addEventListener('focus', handleFocus);
+  input.addEventListener('focus', () => handleFocus(data));
   input.addEventListener('input', () =>
     debouncedHandleInput(listbox, output, input)
   );
@@ -183,4 +207,10 @@ export function initEditableMultiselectCombobox() {
   listbox.addEventListener('keydown', (e) =>
     handleListboxKeyboardNavigation(e, listbox, input)
   );
-}
+  wrapper.appendChild(label);
+  wrapper.appendChild(input);
+  wrapper.appendChild(output);
+  wrapper.appendChild(listbox);
+
+  return wrapper;
+};

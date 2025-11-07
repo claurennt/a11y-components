@@ -1,4 +1,4 @@
-import type { ResponseData } from '../../types';
+import type { ResponseData } from '../types';
 
 export async function fetchData(url: string) {
   try {
@@ -19,37 +19,11 @@ export function getCityAndCountryData(data: ResponseData['data']): string[] {
   return data.map((obj) => `${obj.city}, ${obj.country}`);
 }
 
-export function saveToLocalStorage(key: string, data: string[]) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
-export function getFromLocalStorage(key: string) {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : null;
-}
-
 export function isPreviousSelection(
   selection: string,
   selectedCity: string[]
 ): boolean {
   return selectedCity.includes(selection);
-}
-
-export function createElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  options: Partial<HTMLElementTagNameMap[K]> & Record<string, any> = {}
-): HTMLElementTagNameMap[K] {
-  const element = document.createElement(tag);
-
-  Object.entries(options).forEach(([key, value]) => {
-    if (key in element) {
-      (element as any)[key] = value;
-    } else {
-      element.setAttribute(key, String(value));
-    }
-  });
-
-  return element;
 }
 
 export function updateInputValue(

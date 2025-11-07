@@ -1,0 +1,28 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import * as Combobox from '../../Combobox.stories';
+
+<Meta title='MDX/Combobox/EditableWithListPopup' of={Combobox} />
+
+# Editable Combobox With List Popup
+
+## Description
+
+An editable combobox is a combination of a text input and a listbox that allows users to either type a value directly into the input field or select an option from the listbox. This component enhances user experience by providing flexibility in data entry and selection.
+When a user types 3 characters, the listbox appears with options that match the input. Users can navigate through the options using the keyboard arrow keys or mouse and select an option to populate the input field.
+If there are no matching options, the listbox displays a message indicating that no results were found. The same is announced by screen readers thanks to the `output` HTML element.
+
+## Implementation Notes
+
+This component has been built according to the [W3C Combobox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/), with some differences due to limited screen reader support for certain ARIA attributes:
+
+- The `aria-activedescendant` attribute is not well supported by screen readers. The focus does not remain on the input when navigating the listbox options, but is moved to the currently highlighted option instead.
+
+<br aria-hidden />{' '}
+
+<Canvas>
+  <Story of={Combobox.EditableWithListPopup} />
+</Canvas>
+
+### Known Issues
+
+VoiceOver reads options twice on focus on Safari

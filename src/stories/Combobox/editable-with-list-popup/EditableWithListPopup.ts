@@ -168,13 +168,13 @@ function handleInput(
   const filtered = filterCities(citiesData, query);
   renderCityOptions(filtered, listbox, input, output);
 }
-
+const clearOutput = (output: HTMLOutputElement) => (output.textContent = '');
 const debouncedHandleInput = debounce(handleInput, CONFIG.DEBOUNCE_DELAY);
 
 export const createEditableMultiselect = ({
   id,
   ariaControls,
-  labelText = 'Select a city',
+  labelText = 'Enter city',
   data,
 }: EditableWithListPopupProps) => {
   const wrapper = createElement('div', {
@@ -184,7 +184,6 @@ export const createEditableMultiselect = ({
     for: id,
     textContent: labelText,
   });
-
   const input = createElement('input', {
     id,
     role: 'combobox',
@@ -196,17 +195,23 @@ export const createEditableMultiselect = ({
     role: 'listbox',
     id: ariaControls,
   });
-  const output = createElement('output', { id: `${id}-no-results` });
+  const output = createElement('output', {
+    id: `${id}-no-results`,
+    ariaLive: 'polite',
+  });
 
   input.addEventListener('focus', () => handleFocus(data));
   input.addEventListener('input', () =>
     debouncedHandleInput(listbox, output, input)
   );
-  // Listen for keydown on both input and listbox
-  input.addEventListener('keydown', (e) => focusFirstOption(e, listbox));
+  input.addEventListener('keydown', (e) => {
+    clearOutput(output);
+    focusFirstOption(e, listbox);
+  });
   listbox.addEventListener('keydown', (e) =>
     handleListboxKeyboardNavigation(e, listbox, input)
   );
+
   wrapper.appendChild(label);
   wrapper.appendChild(input);
   wrapper.appendChild(output);

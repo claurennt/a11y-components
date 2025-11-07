@@ -13,6 +13,7 @@ const meta = {
     id: 'editable-combobox',
     ariaControls: 'cities-listbox',
     labelText: 'Select a city',
+    data: [],
   },
 } satisfies Meta<EditableWithListPopupProps>;
 
@@ -23,5 +24,6 @@ export const EditableWithListPopup: StoryObj = {
     id: 'editable-combobox',
     ariaControls: 'cities-listbox',
     labelText: 'Select a city',
+    data: [],
   },
 };

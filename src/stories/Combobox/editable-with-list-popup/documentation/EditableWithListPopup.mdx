@@ -1,4 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
 import * as Combobox from '../../Combobox.stories';
 
 <Meta title='MDX/Combobox/EditableWithListPopup' of={Combobox} />
@@ -26,3 +26,5 @@ This component has been built according to the [W3C Combobox Pattern](https://ww
 ### Known Issues
 
 VoiceOver reads options twice on focus on Safari
+
+<ArgTypes of={Combobox.EditableWithListPopup} />

@@ -11,17 +11,17 @@ An editable combobox is a combination of a text input and a listbox that allows 
 When a user types 3 characters, the listbox appears with options that match the input. Users can navigate through the options using the keyboard arrow keys or mouse and select an option to populate the input field.
 If there are no matching options, the listbox displays a message indicating that no results were found. The same is announced by screen readers thanks to the `output` HTML element.
 
+## Example
+
+<Canvas>
+  <Story of={Combobox.EditableWithListPopup} />
+</Canvas>
+
 ## Implementation Notes
 
 This component has been built according to the [W3C Combobox Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/), with some differences due to limited screen reader support for certain ARIA attributes:
 
 - The `aria-activedescendant` attribute is not well supported by screen readers. The focus does not remain on the input when navigating the listbox options, but is moved to the currently highlighted option instead.
-
-<br aria-hidden />
-
-<Canvas>
-  <Story of={Combobox.EditableWithListPopup} />
-</Canvas>
 
 ## Keyboard Behaviour
 
@@ -30,6 +30,14 @@ When focus is on the input field:
 - `Down Arrow`: places focus on the first focusable element in the listbox, if the listbox is available
 
 When focus is on the listbox:
+
+- `Down Arrow`: moves focus to the next option
+
+- `Up Arrow`: moves focus to the previous option
+
+- `Right Arrow`: moves focus to the textbox
+
+- `Left Arrow`: moves focus to the textbox
 
 - `Enter` or `Space`: Accepts the focused option in the listbox by closing the popup, placing the accepted value in the combobox, and if the combobox is editable, placing the input cursor at the end of the value.
 

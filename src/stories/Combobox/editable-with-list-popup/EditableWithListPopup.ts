@@ -13,7 +13,16 @@ import { clearOutput, clearUI, debounce, filterValues } from './utils';
 const CONFIG = {
   MIN_QUERY_LENGTH: 3,
   DEBOUNCE_DELAY: 500,
-  KEYS: ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Tab', ' '], // Spacebar represented as ' '
+  KEYS: [
+    'ArrowDown',
+    'ArrowUp',
+    'Enter',
+    'Escape',
+    'Tab',
+    ' ',
+    'ArrowRight',
+    'ArrowLeft',
+  ],
 };
 
 /* ------------------ State ------------------ */
@@ -29,15 +38,13 @@ function renderOptions(
 ) {
   clearUI(listbox, input, output);
   if (filteredValues.length === 0) {
-    const message = document.createTextNode('No results found');
-    output.appendChild(message);
+    output.textContent = 'No results found';
     return;
   }
 
-  filteredValues.forEach((value, index) => {
+  filteredValues.forEach((value) => {
     const option = createElement('li', {
       role: 'option',
-      id: `option-${index}`,
       textContent: value,
       tabIndex: -1,
     });
@@ -92,6 +99,12 @@ function handleListboxKeyboardNavigation(
       focusedOption = options[currentIndex];
       break;
 
+    case 'ArrowRight':
+    case 'ArrowLeft':
+      e.preventDefault();
+      input.focus();
+      break;
+
     case 'Enter':
     case ' ':
       e.preventDefault();
@@ -140,6 +153,8 @@ function handleInput(
 
 const debouncedHandleInput = debounce(handleInput, CONFIG.DEBOUNCE_DELAY);
 
+/* ------------------ Init Component ------------------ */
+
 export const createEditableMultiselect = ({
   id,
   ariaControls,
@@ -166,7 +181,6 @@ export const createEditableMultiselect = ({
   const output = createElement('output', {
     id: `${id}-no-results`,
     ariaRelevant: 'additions',
-    ariaLive: 'polite',
     role: 'status', // polyfill for Safari that does not announce the live region
   });
 

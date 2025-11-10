@@ -29,8 +29,8 @@ function renderOptions(
 ) {
   clearUI(listbox, input, output);
   if (filteredValues.length === 0) {
-    setTimeout(() => (output.innerText = 'No results found'), 50);
-
+    const message = document.createTextNode('No results found');
+    output.appendChild(message);
     return;
   }
 

@@ -155,7 +155,6 @@ export const createEditableMultiselect = ({
   const input = createElement('input', {
     id,
     role: 'combobox',
-    'aria-haspopup': 'listbox',
     'aria-controls': ariaControls,
     'aria-expanded': 'false',
   });

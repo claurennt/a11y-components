@@ -10,8 +10,10 @@ export function updateInputValue(
   input.value = selectedValue[0];
 }
 
-export function clearOutput(output: HTMLOutputElement) {
-  return (output.textContent = '');
+export function clearOutput(output: HTMLOutputElement): void {
+  while (output.firstChild) {
+    output.removeChild(output.firstChild);
+  }
 }
 
 export function clearUI(

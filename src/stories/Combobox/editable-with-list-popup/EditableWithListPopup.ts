@@ -29,7 +29,8 @@ function renderOptions(
 ) {
   clearUI(listbox, input, output);
   if (filteredValues.length === 0) {
-    output.textContent = 'No results found';
+    setTimeout(() => (output.innerText = 'No results found'), 50);
+
     return;
   }
 
@@ -165,6 +166,7 @@ export const createEditableMultiselect = ({
   const output = createElement('output', {
     id: `${id}-no-results`,
     ariaRelevant: 'additions',
+    ariaLive: 'polite',
     role: 'status', // polyfill for Safari that does not announce the live region
   });
 

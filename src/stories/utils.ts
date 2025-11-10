@@ -1,3 +1,10 @@
+export type ElementDefinition<
+  K extends keyof HTMLElementTagNameMap = keyof HTMLElementTagNameMap
+> = {
+  tag: K;
+  options?: Partial<HTMLElementTagNameMap[K]> & Record<string, any>;
+};
+
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   options: Partial<HTMLElementTagNameMap[K]> & Record<string, any> = {}

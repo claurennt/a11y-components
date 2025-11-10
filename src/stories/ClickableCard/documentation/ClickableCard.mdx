@@ -1,0 +1,75 @@
+import { Meta, Story, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import * as ClickableCard from './ClickableCard.stories';
+
+<Meta title='MDX/ClickableCard' of={ClickableCard} />
+
+# Clickable Card with Nested Interactive Elements
+
+## Description
+
+This pattern demonstrates how to create an accessible clickable card that contains nested interactive elements without violating accessibility guidelines.
+It's called "semantic breakout pattern".
+
+Typically, we cannot nest interactive elements inside other interactive elements:
+
+```html
+<!-- ❌ Invalid HTML - nested interactive elements -->
+<a href="/page">
+  <h2>Card Title</h2>
+  <p>Description</p>
+  <button>Action</button>
+  <!-- This breaks accessibility -->
+</a>
+```
+
+## Example
+
+<Canvas>
+  <Story of={ClickableCard.ClickableCard} />
+</Canvas>
+
+## Implementation Notes
+
+The card title is an `h2` with an `a` tag and an `::after` pseudo-element extending its clickable area over the entire card. Default link styles are removed (text-underline, focus outline).
+
+Current structure:
+
+```html
+<article>
+  <h2><a href="/page">Card Title</a></h2>
+  <p>Description</p>
+  <a href="/page">Link one</a>
+  <a href="/page">Link two</a>
+</a>
+```
+
+<p>
+  <strong>Details</strong>
+</p>
+
+- Extended Clickable Area:
+
+  1.  The title anchor uses `::after` pseudo-element to create an invisible overlay
+  2.  This overlay extends beyond the title to cover the entire card
+  3.  Maintains semantic HTML while providing full-card clickability
+
+- Focus Management
+
+  1. `:focus-within` on the `article` element shows focus state when any child has focus
+  2. Default focus styles are removed from the title `a` (`text-underline`, focus `outline`)
+  3. Focus ring appears around the entire card for clear visual indication
+
+- Z-Index Stacking
+  1. Nested UI elements' `z-index` is higher than card title's `z-index`
+
+```css
+.nested-link {
+  z-index: 10; /* Above the clickable overlay so nested link's events are triggered*/
+}
+```
+
+#### Useful links
+
+For more information about the Semantic Breakout Pattern, visit: [Create a semantic breakout button to make an entire element clickable](https://www.w3.org/WAI/ARIA/apg/https://piccalil.li/blog/create-a-semantic-break-out-button-to-make-an-entire-element-clickable/)
+
+<ArgTypes of={ClickableCard.ClickableCard} />
